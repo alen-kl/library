@@ -1,0 +1,46 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+  <title>Library - LogIn</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<fieldset style="text-align: center;">
+  <h1>LogIn</h1>
+  <form action="#" th:action="@{/login}" th:object="${webUser}" method="post">
+    <label>Username</label><br>
+    <input type="text" th:field="*{username}" /><br>
+    <label>Password</label><br>
+    <input type="password" th:field="*{password}" /><br><br><br>
+    <input type="submit" value="Log In" /> <input type="reset" value="Reset" />
+  </form>
+</fieldset>
+<br><br>
+<hr>
+<br>
+<div style="text-align: center;">
+  <a th:href="@{/registration}">Registration</a>
+</div>
+<br><br><br>
+<h3 style="text-align: center;">List of users</h3>
+<br>
+<table class="table table-striped">
+  <tr>
+    <th scope="col">ID</th>
+    <th scope="col">USERNAME</th>
+    <th scope="col">PASSWORD</th>
+    <th scope="col">First Name</th>
+    <th scope="col">Last Name</th>
+  </tr>
+  <tr th:each="u : ${users}">
+    <td th:text="${u.id}"></td>
+    <td th:text="${u.username}"></td>
+    <td th:text="${u.rawPassword}"></td>
+    <td th:text="${u.name}"></td>
+    <td th:text="${u.lastName}"></td>
+  </tr>
+</table>
+
+</body>
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Library - Books</title>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap5.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap5.min.css">
+    <script>
+    $(document).ready(function() {
+        $('#datatable').DataTable({
+            "iDisplayLength": 25,
+        });
+     });
+    </script>
+</head>
+
+<style>
+
+#signoutBtn{
+    background-color: #0d6efd;
+    margin-left: 2%;
+    }
+#signoutBtn:hover{
+    background-color: red;
+    }
+
+#options {
+  list-style-type: none;
+  margin-left: 2%;
+  background-color: #EAE9E7;
+  width: 20%;
+  border-style: solid;
+}
+
+#options > a {
+  float: center;
+  display: block;
+  color: black;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+.active {
+  background-color: #A3A2A0;
+}
+
+</style>
+<body>
+<br>
+<div style="text-color: white;">
+<form th:action="@{/logout}" method="post">
+    <input id="signoutBtn" type="submit" value="Sign Out" />
+</form>
+</div>
+<br>
+
+<div style="text-align: center;">
+    <h2>Bookshelf</h2>
+    <br>
+    <div id="options">
+        <a th:href="@{books}" class="active">All Books</a>
+        <a th:href="@{free_books}">Free Books Only</a>
+    </div>
+</div>
+<br>
+<div style="margin-left: 2%; margin-right: 2%;">
+<table id="datatable" class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Title</th>
+            <th scope="col">Author</th>
+            <th scope="col">Genre</th>
+            <th scope="col">Price</th>
+            <th scope="col">Publish Date</th>
+            <th scope="col">Description</th>
+            <th scope="col">ACTION</th>
+        </tr>
+    </thead>
+    <tbody>
+    <tr th:each="b : ${books}">
+        <td th:text="${b.id}"></td>
+        <td th:text="${b.title}"></td>
+        <td th:text="${b.author}"></td>
+        <td th:text="${b.genre}"></td>
+        <td th:text="${b.price}"></td>
+        <td th:text="${#strings.substring(b.publishDate,0,10)}"></td>
+        <td th:text="${b.description}"></td>
+        <td>
+            <div th:switch="${b.webUser?.id}">
+                <form th:case="${uid}" th:action="@{/return_book}" method="post">
+                    <input type="text" th:value="${b.id}" name="bookId" style="display: none;">
+                    <input type="submit" value="Return" style="background-color: darkred; color: white;">
+                </form>
+                <form th:case="null" th:action="@{/borrow_book}" method="post">
+                    <input type="text" th:value="${b.id}" name="bookId" style="display: none;">
+                    <input type="submit" value="Take" style="background-color: darkgreen; color: white;">
+                </form>
+                <div th:case="*" >
+                    <p>Borrowed:</p>
+                    <p th:text="${b.webUser?.name + ' ' + b.webUser?.lastName}"></p>
+                </div>
+            </div>
+
+        </td>
+    </tr>
+    </tbody>
+</table>
+</div>
+<br>
+
+<footer>
+    <p style="margin-left: 2%;">
+        User: <b>[[${#request.userPrincipal.principal.fullName}]]</b>
+    </p>
+</footer>
+
+</body>
+</html>
